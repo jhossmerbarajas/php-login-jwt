@@ -1,0 +1,17 @@
+{
+    "name": "jhossweb/php-login-jwt",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JhossDev",
+            "email": "jhossmerpalenci@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    }
+}
