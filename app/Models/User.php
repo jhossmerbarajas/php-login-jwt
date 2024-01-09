@@ -16,14 +16,11 @@ class User implements IUserRepository
 		return $this->connect();
 	}
 
-	/* Querys */
-	function all () {
-		$sql = "SELECT * FROM {$this->table}";
-		return $this->query($sql)->get();
+	function passwordHash (string $pass): string {
+		return password_hash($pass, PASSWORD_DEFAULT);
 	}
 
-	function findOne ( int|string $id ) {
-		$sql = "SELECT * FROM {$this->table} WHERE id = ?";
-		return $this->query($sql, [$id])->first();
+	function passwordVerify (string $pass, string $passHash): string {
+		return password_verify($pass, $passHash);
 	}
 }

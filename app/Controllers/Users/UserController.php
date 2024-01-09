@@ -9,6 +9,6 @@ class UserController
 
 	function index () {
 		$user  = new User;
-		var_dump($user->all());
+		return $user;
 	}
 }

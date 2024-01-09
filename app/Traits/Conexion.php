@@ -65,4 +65,41 @@ trait Conexion
 	function get (){
 		return $this->query->fetchAll(PDO::FETCH_ASSOC);
 	}
+
+	/* Querys */
+	function all () {
+		$sql = "SELECT * FROM {$this->table}";
+		return $this->query($sql)->get();
+	}
+
+	function findOne ( int|string $id ) {
+		$sql = "SELECT * FROM {$this->table} WHERE id = ?";
+		return $this->query($sql, [$id])->first();
+	}
+
+	function create ($data) {
+		$columns = array_keys($data);
+		$columns = implode(', ', $columns);
+
+		$values = array_values($data);
+
+		$sql = "INSERT INTO {$this->table} ({$columns}) VALUES (" . str_repeat('?, ', count($values) -1) . "?)";
+
+		$this->query($sql, $values);
+
+		$user_id = $this->connection->lastInsertId();
+		return $this->findOne($user_id);
+	}
+
+	function where ($column, $operator, $value = null) {
+		if($value == null) {
+			$value = $operator;
+			$operator = "=";
+		}
+
+		$sql = "SELECT * FROM {$this->table} WHERE {$column} {$operator} ?";
+		$this->query($sql, [$value]);
+
+		return $this;
+	}
 }
