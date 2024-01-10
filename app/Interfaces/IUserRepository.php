@@ -3,5 +3,6 @@
 namespace App\Interfaces;
 
 interface IUserRepository {
-	function all();
+	function passwordHash(string $pass): string;
+	function passwordVerify (string $pass, string $passHash): string;
 }

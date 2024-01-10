@@ -8,21 +8,33 @@ use Firebase\JWT\Key;
 
 trait AuthJwt
 {
-	function encode(int $id) {
+	private $key = SECRET_JWT;
+
+	function generateToker(int $id, string $email, int $role_id) {
 		// JWT
-		$key = SECRET_JWT;
 		$now = strtotime("now");
 		$payload = [
-			"data" => $id,
-			"exp" => strtotime("+2 minutes") 
+			"data" => [
+						"id" => $id,
+						"email" => $email,
+						"role_id" => $role_id 
+					],
+			"exp" => strtotime("+30 minutes") 
 		];
 
-		$jwt = JWT::encode($payload, $key, 'HS256');
-		echo $jwt;
+		$jwt = JWT::encode($payload, $this->key, 'HS256');
+		return $jwt;
 	}
 
-	function getToken() {
-		$headers = apache_request_headers();
-		return $headers;
+	function validateToken ($token) {
+		try {
+			$validate = JWT::decode($token, new Key($this->key, "HS256"));
+			return $validate;
+
+		} catch (\Exception $e) {
+			echo "Error: " . $e->getMessage();
+			echo "Line: " . $e->getLine();
+			return false;
+		}
 	}
 }

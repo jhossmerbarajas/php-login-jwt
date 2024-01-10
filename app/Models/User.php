@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Interfaces\IUserRepository;
 use App\Traits\Conexion;
 
+
 class User implements IUserRepository
 {
 	use Conexion;

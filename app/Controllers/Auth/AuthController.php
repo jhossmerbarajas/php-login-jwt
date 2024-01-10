@@ -15,28 +15,22 @@ class AuthController extends Controller
 {
 	use AuthJwt, Request, Response;
 
-	function signup() {
-		return $this->view('auth.signup');
-	}
 
 	function register () {
 		$cnx = new User;
 		
-		$data = $_POST;
-		$hash = $cnx->passwordHash($data["pass"]);
-		$data["pass"] = $hash;
+		$data = $this->body;
 
-		$user_created = $cnx->create($data);
+		$hash = $cnx->passwordHash($data->pass);
+		$data->pass = $hash;
 
-		return $this->redirect('auth.signin');
-	}
-
-	function signin() {
-		return $this->view('auth.signin');
+		$user_created = $cnx->create(get_object_vars($data));
+		
+		return $this->send($user_created);
 	}
 
 	function login() {
-		$data = json_decode($this->body, false);
+		$data = $this->body;
 
 		$model = new User;
 		$user = $model->where("email", $data->email)->first();
@@ -44,9 +38,12 @@ class AuthController extends Controller
 		if(!$user) return "Email not found";
 		if(!$model->passwordVerify($data->pass, $user["pass"])) return "password incorred";
 
-		echo $this->send($user);
+		
 		// //JWT
-		print_r( $this->getToken());
+		$token = $this->generateToker($user["id"], $user["email"], $user["role_id"]);
+		header("Content-Type: application/json");
+		$this->send($user, 200, ["auth-token" => $token]);
+		return json_encode(["msg" => "user Logued"], true);
 		
 	}
 }
