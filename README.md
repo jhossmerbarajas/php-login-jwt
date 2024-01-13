@@ -13,6 +13,10 @@
 
 ## Clonar El repositorio
 
+```
+https://github.com/jhossmerbarajas/php-login-jwt.git
+```
+
 ## Configuración
 <p>
 	Para usar este proyecto, debes configurar las credenciales de conexión a tu base de datos. Ese archivo lo encontrarás en la ruta:
